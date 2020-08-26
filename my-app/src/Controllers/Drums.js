@@ -40,12 +40,12 @@ class DrumController {
         this.closed = new Closed(this.updateLoadStatus('closed'));
         this.claps = new Claps(this.updateLoadStatus('claps'));
         this.percs = new Percs(this.updateLoadStatus('percs'));
-        this.kicks.output.connect(this.output);
-        this.snares.output.connect(this.output);
-        this.open.output.connect(this.output);
-        this.closed.output.connect(this.output);
-        this.claps.output.connect(this.output);
-        this.percs.output.connect(this.output);
+        this.kicks.output.chain(this.output);
+        this.snares.output.chain(this.output);
+        this.open.output.chain(this.output);
+        this.closed.output.chain(this.output);
+        this.claps.output.chain(this.output);
+        this.percs.output.chain(this.output);
     }
 
     updateLoadStatus(type) {

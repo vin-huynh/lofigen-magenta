@@ -3,7 +3,7 @@ import Guitar from '../Instruments/Guitar/Guitar';
 import Piano from '../Instruments/Piano/Piano';
 import {prob} from '../Util/Util';
 
-const lpf = new Tone.Filter(1200,'lowpass');
+const lpf = new Tone.Filter(400,'lowpass');
 
 class ChordController {
     constructor(setReady) {

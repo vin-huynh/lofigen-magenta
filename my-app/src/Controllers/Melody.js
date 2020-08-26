@@ -30,8 +30,8 @@ class MelodyController {
         ]).then(() => this.updateLoadStatus('models'));
         this.guitar = new Guitar(this.updateLoadStatus('guitar'));
         this.piano = new Piano(this.updateLoadStatus('piano'));
-        this.guitar.output.connect(this.output);
-        this.piano.output.connect(this.output);
+        this.guitar.output.chain(this.output);
+        this.piano.output.chain(this.output);
     }
 
     updateLoadStatus(type) {

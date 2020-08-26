@@ -4,6 +4,7 @@ import BassController from './Basses';
 import ChordController from './Chords';
 import DrumController from './Drums';
 import MelodyController from './Melody';
+import Vinyl from '../Instruments/Vinyl/Vinyl';
 import {prob, randEl} from '../Util/Util';
 
 Tone.Context.lookAhead = 0.5;
@@ -11,6 +12,7 @@ Tone.Transport.bpm.value = 80;
 
 class Master {
     constructor(setInstrumentsReady, setPartsReady) {
+        this.pg = new ProgressionGenerator();
         this.setInstrumentsReady = setInstrumentsReady;
         this.setPartsReady = setPartsReady;
         this.instrumentsLoaded = false;
@@ -19,6 +21,7 @@ class Master {
             chords: false,
             melody: false,
             drums: false,
+            vinyl: false,
         };
         this.partLoadStatus = {
             drums: false,
@@ -32,7 +35,7 @@ class Master {
             }
             this.instrumentsLoaded = instrumentsLoaded;
             if(this.instrumentsLoaded) {
-                this.connectControllerOutputs();
+                this.chainControllerOutputs();
                 this.setInstrumentsReady(true);
                 this.generateSong();
             }
@@ -48,11 +51,11 @@ class Master {
         }
         this.output = new Tone.Gain(1);
         this.output.toDestination();
-        this.pg = new ProgressionGenerator();
         this.bc = new BassController();
         this.cc = new ChordController(this.updateInstrumentLoadStatus);
         this.dc = new DrumController(this.updateInstrumentLoadStatus, this.updatePartLoadStatus);
         this.mc = new MelodyController(this.updateInstrumentLoadStatus, this.updatePartLoadStatus);
+        this.vinyl = new Vinyl(this.updateInstrumentLoadStatus);
 
         this.loop = new Tone.Loop((time) => {
             this.bc.on = prob(0.95);
@@ -64,27 +67,30 @@ class Master {
         },'8m').start(0);
     }
 
-    connectControllerOutputs() {
-        this.bc.output.connect(this.output);
-        this.cc.output.connect(this.output);
-        this.dc.output.connect(this.output);
-        this.mc.output.connect(this.output);
+    chainControllerOutputs() {
+        this.bc.output.chain(this.output);
+        this.cc.output.chain(this.output);
+        this.dc.output.chain(this.output);
+        this.mc.output.chain(this.output);
+        this.vinyl.output.chain(this.output);
     }
 
-    generateSong() {
+    async generateSong() {
         this.pg.generateProgression();
         this.bc.update(this.pg.getRootsAndFifths(1));
         this.cc.update(this.pg.getShellVoicings(3,true));
-        this.dc.update();
-        this.mc.update(this.pg.getChordScales(),this.pg.chords,this.pg.form);
+        await this.dc.update();
+        await this.mc.update(this.pg.getChordScales(),this.pg.chords,this.pg.form);
     }
 
     play() {
         Tone.start();
+        this.vinyl.start();
         Tone.Transport.start();
     }
 
     stop() {
+        this.vinyl.stop();
         Tone.Transport.stop();
     }
 

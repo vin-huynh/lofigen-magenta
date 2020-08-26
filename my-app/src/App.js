@@ -53,6 +53,8 @@ function App() {
         </button>
         <button className="nextBtn"
                 onClick={() => {
+                  master.current.stop();
+                  setPlaying(false);
                   master.current.generateSong(); 
                   setLoaded(false);}}>
           <b>{'>>'}</b>

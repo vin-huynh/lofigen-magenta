@@ -23,7 +23,7 @@ const Visualizer = (props) => {
         <div className="freqList">
             {freqs.map((v,i) => {
 
-                const height = Math.max(3*(69+0.5*v),10); 
+                const height = Math.max(5.2*(52+0.52*v),10); 
                 return(
                     <div key={i}
                         className="freqBar"
