@@ -79,8 +79,10 @@ class Master {
         this.pg.generateProgression();
         this.bc.update(this.pg.getRootsAndFifths(1));
         this.cc.update(this.pg.getShellVoicings(3,true));
-        await this.dc.update();
-        await this.mc.update(this.pg.getChordScales(),this.pg.chords,this.pg.form);
+        await Promise.all([
+            this.dc.update(),
+            this.mc.update(this.pg.getChordScales(),this.pg.chords,this.pg.form)
+        ]);
     }
 
     play() {
