@@ -8,8 +8,9 @@ import {prob} from '../Util/Util';
 import {correct, format} from '../Progressions/MelodyCorrection';
 
 class MelodyController {
-    constructor(setReady) {
+    constructor(setReady, setParts) {
         this.setReady = setReady;
+        this.setParts = setParts;
         this.loadStatus = {
             guitar: false,
             piano: false,
@@ -47,7 +48,7 @@ class MelodyController {
     }
 
     async update(chordScales, progression, form) {
-        this.setReady('models', false);
+        this.setParts('melody',false);
         this.updateInstrument();
 
         const scalePairs = [];
@@ -95,7 +96,7 @@ class MelodyController {
         this.melody = formatted;
 
         this.updatePart();
-        this.setReady('models', true);
+        this.setParts('melody',true);
     }
 
     updatePart() {

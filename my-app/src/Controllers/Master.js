@@ -6,18 +6,53 @@ import DrumController from './Drums';
 import MelodyController from './Melody';
 import {prob, randEl} from '../Util/Util';
 
-Tone.Context.lookAhead = 0.1;
+Tone.Context.lookAhead = 0.5;
 Tone.Transport.bpm.value = 80;
 
 class Master {
-    constructor(setReady) {
+    constructor(setInstrumentsReady, setPartsReady) {
+        this.setInstrumentsReady = setInstrumentsReady;
+        this.setPartsReady = setPartsReady;
+        this.instrumentsLoaded = false;
+        this.partsLoaded = false;
+        this.instrumentLoadStatus = {
+            chords: false,
+            melody: false,
+            drums: false,
+        };
+        this.partLoadStatus = {
+            drums: false,
+            melody: false,
+        }
+        this.updateInstrumentLoadStatus = (controller, ready) => {
+            this.instrumentLoadStatus[controller] = ready;
+            let instrumentsLoaded = true;
+            for(const controller in this.instrumentLoadStatus) {
+                instrumentsLoaded = instrumentsLoaded && this.instrumentLoadStatus[controller];
+            }
+            this.instrumentsLoaded = instrumentsLoaded;
+            if(this.instrumentsLoaded) {
+                this.connectControllerOutputs();
+                this.setInstrumentsReady(true);
+                this.generateSong();
+            }
+        }
+        this.updatePartLoadStatus = (controller, ready) => {
+            this.partLoadStatus[controller] = ready;
+            let partsLoaded = true;
+            for(const controller in this.partLoadStatus) {
+                partsLoaded = partsLoaded && this.partLoadStatus[controller];
+            }
+            this.partsLoaded = partsLoaded;
+            this.setPartsReady(this.partsLoaded);
+        }
         this.output = new Tone.Gain(1);
         this.output.toDestination();
         this.pg = new ProgressionGenerator();
         this.bc = new BassController();
-        this.cc = new ChordController(setReady);
-        this.dc = new DrumController(setReady);
-        this.mc = new MelodyController(setReady);
+        this.cc = new ChordController(this.updateInstrumentLoadStatus);
+        this.dc = new DrumController(this.updateInstrumentLoadStatus, this.updatePartLoadStatus);
+        this.mc = new MelodyController(this.updateInstrumentLoadStatus, this.updatePartLoadStatus);
 
         this.loop = new Tone.Loop((time) => {
             this.bc.on = prob(0.95);

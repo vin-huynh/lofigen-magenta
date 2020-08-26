@@ -5,7 +5,8 @@ import pattern from '../Patterns/Drums';
 import { midiToDrum } from '../Patterns/MidiMappings';
 
 class DrumController {
-    constructor(setReady) {
+    constructor(setReady,setParts) {
+        this.setParts = setParts;
         this.setReady = setReady;
         this.loadStatus = {
             kicks: false,
@@ -57,8 +58,7 @@ class DrumController {
     }
     
     async update() {
-        this.setReady('models', false);
-
+        this.setParts('drums',false);
         const fseq = [];
         let z = await vae.encode([pattern]);
         const seq = await vae.decode(z, 1.2, undefined, 4, 80);
@@ -81,7 +81,7 @@ class DrumController {
         this.percs.update();
         
         this.updatePart();
-        this.setReady('models',true);
+        this.setParts('drums',true);
     }
 
     updatePart() {

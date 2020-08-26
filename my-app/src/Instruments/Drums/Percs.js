@@ -21,7 +21,7 @@ class Percs {
     trigger = (time) => {
         const selected = randEl(Object.keys(this.samples));
         if(this.players.player(selected).state === 'stopped') {
-            this.players.player(selected).start(time);
+            this.players.player(selected).restart(time);
         }
     }
 
