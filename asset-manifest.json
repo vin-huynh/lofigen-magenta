@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/lofigen-magenta/static/css/main.a1388623.chunk.css",
+    "main.js": "/lofigen-magenta/static/js/main.e46e2015.chunk.js",
+    "main.js.map": "/lofigen-magenta/static/js/main.e46e2015.chunk.js.map",
+    "runtime-main.js": "/lofigen-magenta/static/js/runtime-main.02b670aa.js",
+    "runtime-main.js.map": "/lofigen-magenta/static/js/runtime-main.02b670aa.js.map",
+    "static/js/2.d3292597.chunk.js": "/lofigen-magenta/static/js/2.d3292597.chunk.js",
+    "static/js/2.d3292597.chunk.js.map": "/lofigen-magenta/static/js/2.d3292597.chunk.js.map",
+    "index.html": "/lofigen-magenta/index.html",
+    "precache-manifest.782bbea48a4277af36a513a65bb228df.js": "/lofigen-magenta/precache-manifest.782bbea48a4277af36a513a65bb228df.js",
+    "service-worker.js": "/lofigen-magenta/service-worker.js",
+    "static/css/main.a1388623.chunk.css.map": "/lofigen-magenta/static/css/main.a1388623.chunk.css.map",
+    "static/js/2.d3292597.chunk.js.LICENSE.txt": "/lofigen-magenta/static/js/2.d3292597.chunk.js.LICENSE.txt",
+    "static/media/azukiB.ttf": "/lofigen-magenta/static/media/azukiB.6f9ed360.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.02b670aa.js",
+    "static/js/2.d3292597.chunk.js",
+    "static/css/main.a1388623.chunk.css",
+    "static/js/main.e46e2015.chunk.js"
+  ]
+}
