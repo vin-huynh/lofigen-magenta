@@ -9,6 +9,16 @@ import {prob, randEl} from '../Util/Util';
 
 Tone.Context.lookAhead = 0.5;
 Tone.Transport.bpm.value = 80;
+const hpf = new Tone.Filter(28,'highpass');
+const lpf = new Tone.Filter(6400,'lowpass');
+
+const eq = new Tone.EQ3({
+    lowFrequency: 400,
+    highFrequency: 1600,
+    low: -1,
+    mid: 1,
+    high: -1,
+});
 
 class Master {
     constructor(setInstrumentsReady, setPartsReady) {
@@ -37,7 +47,6 @@ class Master {
             if(this.instrumentsLoaded) {
                 this.chainControllerOutputs();
                 this.setInstrumentsReady(true);
-                this.generateSong();
             }
         }
         this.updatePartLoadStatus = (controller, ready) => {
@@ -49,7 +58,7 @@ class Master {
             this.partsLoaded = partsLoaded;
             this.setPartsReady(this.partsLoaded);
         }
-        this.output = new Tone.Gain(1);
+        this.output = new Tone.Gain(1).chain(eq,hpf,lpf);
         this.output.toDestination();
         this.bc = new BassController();
         this.cc = new ChordController(this.updateInstrumentLoadStatus);
@@ -58,10 +67,10 @@ class Master {
         this.vinyl = new Vinyl(this.updateInstrumentLoadStatus);
 
         this.loop = new Tone.Loop((time) => {
-            this.bc.on = prob(0.95);
+            this.bc.on = prob(0.70);
             this.cc.on = true;
-            this.dc.on = prob(0.95);
-            this.mc.on = prob(0.95);
+            this.dc.on = prob(0.85);
+            this.mc.on = prob(0.85);
             this.mc.voice = randEl([0,1,2]);
             this.mc.updateInstrument();
         },'8m').start(0);

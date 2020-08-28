@@ -3,7 +3,12 @@ import {kicks} from './Samples';
 import DrumSampleLoader from '../Util/DrumSampleLoader';
 import {randEl} from '../../Util/Util';
 
-const vol = new Tone.Volume(-12);
+const hpf = new Tone.Filter({
+    frequency: 28,
+    Q: 0.5,
+    type: 'highpass',
+});
+const vol = new Tone.Volume(-16);
 
 class Kicks {
     constructor(cb) {
@@ -11,7 +16,7 @@ class Kicks {
         this.players = new Tone.Players(this.samples, () => cb());
         this.selected = 0;
         this.output = new Tone.Gain(1);
-        this.players.chain(vol, this.output);
+        this.players.chain(hpf, vol, this.output);
     }
 
     trigger = (time) => {

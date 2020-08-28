@@ -18,10 +18,18 @@
 
 .loadInfo {
   font-size: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .instructions {
   font-size: 1.2rem;
+}
+
+.generateFirst {
+  font-size: 2rem;
+  max-width: 50%;
 }
 
 button {

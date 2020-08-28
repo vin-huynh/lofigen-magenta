@@ -3,8 +3,6 @@ import Guitar from '../Instruments/Guitar/Guitar';
 import Piano from '../Instruments/Piano/Piano';
 import {prob} from '../Util/Util';
 
-const lpf = new Tone.Filter(400,'lowpass');
-
 class ChordController {
     constructor(setReady) {
         this.setReady = setReady;
@@ -23,8 +21,10 @@ class ChordController {
     init() {
         this.guitar = new Guitar(this.updateLoadStatus('guitar'));
         this.piano = new Piano(this.updateLoadStatus('piano'));
-        this.guitar.output.chain(lpf, this.output);
-        this.piano.output.chain(lpf, this.output);
+        const sw = new Tone.StereoWidener(0.67);
+        const hsf = new Tone.Filter(200,'highshelf');
+        this.guitar.output.chain(hsf,sw,this.output);
+        this.piano.output.chain(hsf,sw,this.output);
     }
 
     updateLoadStatus(type) {
@@ -46,7 +46,9 @@ class ChordController {
         this.sequence.dispose();
         this.sequence = new Tone.Sequence((time,value) => {
             if(this.on) {
-                value.chord.forEach((note,i) => this.instrument.trigger(note, "1m", Tone.Time(time) + Tone.Time(0.015*i)));
+                value.chord.forEach((note,i) => {
+                    this.instrument.trigger(note, "1m", Tone.Time(time) + Tone.Time(0.015*i));
+                });
             }
         },this.chords.map(chord => {return {chord: chord}}),'1m').start(0);
         

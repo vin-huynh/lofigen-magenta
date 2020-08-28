@@ -30,8 +30,10 @@ class MelodyController {
         ]).then(() => this.updateLoadStatus('models'));
         this.guitar = new Guitar(this.updateLoadStatus('guitar'));
         this.piano = new Piano(this.updateLoadStatus('piano'));
-        this.guitar.output.chain(this.output);
-        this.piano.output.chain(this.output);
+        const sw = new Tone.StereoWidener(0.33);
+        const hsf = new Tone.Filter(200,'highshelf');
+        this.guitar.output.chain(hsf,sw,this.output);
+        this.piano.output.chain(hsf,sw,this.output);
     }
 
     updateLoadStatus(type) {

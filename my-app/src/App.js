@@ -8,8 +8,7 @@ function App() {
   const [partsLoaded, setPartsLoaded] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [playing, setPlaying] = useState(false);
-
-  
+  const [generatedFirst, setGeneratedFirst] = useState(false);
 
   useEffect(() => {
     setLoaded(instrumentsLoaded && partsLoaded);
@@ -38,7 +37,9 @@ function App() {
       </div>
 
       <div className="colorBox">
-        <div className="loadInfo">{loaded? '' : 'LOADING'}</div>
+        <div className="loadInfo">
+          {loaded? '' : (generatedFirst? 'LOADING' : 
+            <p className="generateFirst">Click <b>{'>>'}</b> to Generate Your First Song!</p>)}</div>
         <div className="visualizer">
           {loaded? <Visualizer audio={master.current.output}/> : '' }
         </div>
@@ -52,7 +53,9 @@ function App() {
           <b>{playing? 'Stop' : 'Play'}</b>
         </button>
         <button className="nextBtn"
+                disabled={!loaded && generatedFirst}
                 onClick={() => {
+                  setGeneratedFirst(true);
                   master.current.stop();
                   setPlaying(false);
                   master.current.generateSong(); 

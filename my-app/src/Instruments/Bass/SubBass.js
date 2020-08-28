@@ -17,7 +17,7 @@ const sat = new Tone.Chebyshev({
     wet: 0.2
 });
 
-const vol = new Tone.Volume(-36);
+const vol = new Tone.Volume(-40);
 
 class SubBass {
     constructor() {
